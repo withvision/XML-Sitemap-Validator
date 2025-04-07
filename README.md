@@ -40,10 +40,10 @@ https://deinedomain.tld/setup.php
 Die einstellungen können in der `config.php` Datei angepasst werden:
 
 ```php
-$db_host = 'localhost';
-$db_name = 'sitemap_checker';
-$db_user = 'root';
-$db_pass = '';
+        'host' => getenv('DB_HOST') ?: 'localhost',
+        'username' => getenv('DB_USER') ?: 'usernamehere',
+        'password' => getenv('DB_PASS') ?: 'passwordhere',
+        'database' => getenv('DB_NAME') ?: 'databasenamehere'
 ```
 
 4. **Nutzung**
