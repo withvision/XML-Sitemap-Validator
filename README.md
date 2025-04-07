@@ -40,10 +40,10 @@ https://deinedomain.tld/setup.php
 Die einstellungen können in der `config.php` Datei angepasst werden:
 
 ```php
-        'host' => getenv('DB_HOST') ?: 'localhost',
-        'username' => getenv('DB_USER') ?: 'usernamehere',
-        'password' => getenv('DB_PASS') ?: 'passwordhere',
-        'database' => getenv('DB_NAME') ?: 'databasenamehere'
+'host' => getenv('DB_HOST') ?: 'localhost',
+'username' => getenv('DB_USER') ?: 'usernamehere',
+'password' => getenv('DB_PASS') ?: 'passwordhere',
+'database' => getenv('DB_NAME') ?: 'databasenamehere'
 ```
 
 4. **Nutzung**
@@ -53,12 +53,12 @@ Nach der Installation einfach die `index.php` in einem Browser deiner Wahl aufru
 ## 📂 Projektstruktur
 
 ```
-├── config.php              # Datenbankverbindung
-├── index.php              # Einstiegspunkt / Formular
-├── setup.php              # Erstkonfiguration / Datenbank-Tabelle
-├── form_template.php      # HTML-Formular
-├── results_template.php   # Ausgabe der Prüf-Ergebnisse
-├── rate_limit_template.php# Rate-Limit-Meldung
+├── config.php                     # Datenbankverbindung
+├── index.php                      # Einstiegspunkt / Formular
+├── setup.php                      # Erstkonfiguration / Datenbank-Tabelle
+├── form_template.php              # HTML-Formular
+├── results_template.php           # Ausgabe der Prüf-Ergebnisse
+├── rate_limit_template.php        # Rate-Limit-Meldung
 ```
 
 ## 📌 Hinweise
