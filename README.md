@@ -1,7 +1,7 @@
-# 🧭  XML Sitemap Validator
+#  XML Sitemap Validator
 Ein einfacher PHP-basierter Validator zur Überprüfung von XML-Sitemaps.
 
-![XML Sitemap Validator Screenshot](screenshot.png)
+![XML Sitemap Validator Screenshot](Screenshot.jpg)
 
 ## Funktionen
 
@@ -90,6 +90,6 @@ Beiträge sind willkommen! Bitte erstellen Sie einen Pull-Request oder eröffnen
 ├── rate_limit_template.php        # Rate-Limit-Meldung
 ```
 
-## 📌 Hinweise
+## Hinweise
 
-- Das Tool prüft auf HTTP-Statuscodes und auf diverse SEO-Kriterien.
+- Das Tool Setzt grad auf MySQL/MariaDB, bei interesse kann ich es aber auch auf SQLite umbauen.
