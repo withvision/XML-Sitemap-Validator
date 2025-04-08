@@ -882,7 +882,7 @@
                 
                 <div class="text-center mt-3">
                     <small class="text-muted">
-                    &copy; <?php echo date('Y'); ?> by <a href="https://dlx-media.com">DLx-Media.com</a> - Sitemap Validator | 
+                    &copy; <?php echo date('Y'); ?> by <a href="https://dlx-media.com">DLx-Media.com</a> - XML Sitemap Validator | 
                     <a href="https://github.com/withvision/XML-Sitemap-Validator" target="_blank" class="text-muted">
                             <i class="fab fa-github"></i> GitHub
                         </a>
