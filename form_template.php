@@ -14,10 +14,10 @@
             <div class="col-lg-8">
                 <div class="card shadow">
                     <div class="card-header bg-primary text-white">
-                        <h1 class="h4 mb-0">Sitemap Validator</h1>
+                        <h1 class="h4 mb-0">XML Sitemap Validator</h1>
                     </div>
                     <div class="card-body">
-                        <p class="lead">Geben Sie die URL einer Sitemap-Datei ein, um diese zu analysieren:</p>
+                        <p class="lead">Geben Sie die URL einer XML Sitemap-Datei ein, um diese zu analysieren:</p>
                         
                         <form action="?action=validate" method="post" id="sitemap-form">
                             <div class="mb-3">
