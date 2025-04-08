@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Sitemap Validator - Ergebnisse der Sitemap-Analyse">
     <meta name="robots" content="noindex, nofollow">
-    <title>Sitemap Validator - Ergebnisse</title>
+    <title>XML Sitemap Validator - Ergebnisse</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 </head>
