@@ -1158,7 +1158,7 @@ function validateSitemap($url, $cacheDir, $config, $id = null) {
     // Valide MIME-Types prüfen
     $validXmlMimeTypes = ['text/xml', 'application/xml', 'application/xhtml+xml', 'text/html']; // HTML kann auch XML enthalten
     $validGzipMimeTypes = ['application/gzip', 'application/x-gzip', 'application/octet-stream']; // octet-stream kann auch gzip sein
-    
+
     $results['valid_mime_type'] = false;
     if ($results['is_compressed']) {
         // Für komprimierte Dateien
@@ -1168,10 +1168,6 @@ function validateSitemap($url, $cacheDir, $config, $id = null) {
                 break;
             }
         }
-        
-        if (!$results['valid_mime_type']) {
-            $results['errors'][] = "Ungültiger MIME-Type für komprimierte Sitemap: " . $contentType . ". Erwartet wurde einer von: " . implode(', ', $validGzipMimeTypes);
-        }
     } else {
         // Für XML-Dateien
         foreach ($validXmlMimeTypes as $mimeType) {
@@ -1180,10 +1176,10 @@ function validateSitemap($url, $cacheDir, $config, $id = null) {
                 break;
             }
         }
-        
-        if (!$results['valid_mime_type']) {
-            $results['errors'][] = "Ungültiger MIME-Type für XML-Sitemap: " . $contentType . ". Erwartet wurde einer von: " . implode(', ', $validXmlMimeTypes);
-        }
+    }
+    
+    if (!$results['valid_mime_type']) {
+        $results['errors'][] = "Ungültiger MIME-Type für XML-Sitemap: " . $contentType . ". Erwartet wurde einer von: " . implode(', ', $validXmlMimeTypes);
     }
     
     if ($httpCode !== 200) {
