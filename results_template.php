@@ -15,7 +15,7 @@
             <div class="col-lg-10">
                 <div class="card shadow">
                     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                        <h1 class="h4 mb-0">Sitemap Validator - Ergebnisse</h1>
+                        <h1 class="h4 mb-0">XML Sitemap Validator - Ergebnisse</h1>
                         <div>
                             <a href="javascript:window.print();" class="btn btn-outline-light btn-sm me-2" title="Drucken">
                                 <i class="fas fa-print"></i>
