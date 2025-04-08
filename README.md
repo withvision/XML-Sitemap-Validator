@@ -1,6 +1,8 @@
 #  XML Sitemap Validator
-Ein einfacher PHP-basierter Validator zur Überprüfung von XML-Sitemaps.
-Wer es Testen möchte oder einfach nur nutzen möchte, ohne es selbst zu Hosten, kann dies auch gerne hier machen:
+Ein schlankes, PHP-basiertes Tool zur präzisen Überprüfung Ihrer XML-Sitemaps. 
+Diese Lösung kombiniert Einfachheit mit Leistungsfähigkeit, um Ihnen die XML Sitemap-Validierung so angenehm wie möglich zu gestalten.
+Möchten Sie es ausprobieren oder einfach Nutzen, ohne sich mit der Installation zu beschäftigen? Kein Problem! 
+Nutzen Sie gerne unseren kostenlosen Online-Validator direkt hier:
 [Free Online XML Sitemap Validator](https://www.simon-pokorny.com/xml-sitemap-validator/)
 
 ![XML Sitemap Validator Screenshot](Screenshot.jpg)
