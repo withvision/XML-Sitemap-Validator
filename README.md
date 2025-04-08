@@ -1,54 +1,83 @@
 # 🧭  XML Sitemap Validator
-Ein einfacher PHP-basierter Validator zur Überprüfung von XML-Sitemaps. Das Tool prüft online, ob die sitemap.xml oder sitemap.xml.gz erreichbar und valide ist und gibt den Status sowie Attribute dazu aus. Es wird ein Webserver mit PHP, MySQL, cURL und gzip-Unterstützung benötigt.
+Ein einfacher PHP-basierter Validator zur Überprüfung von XML-Sitemaps.
 
-## 🚀 Features
+![XML Sitemap Validator Screenshot](screenshot.png)
 
-- Formularbasierte Eingabe einer Sitemap-URL
-- Automatischer Abruf und Parsing der Sitemap (auch `.gz` wird unterstützt)
-- HTTP-Statuscode-Prüfung
-- Analyse der XML Sitemap mit Bewertung
-- Übersichtliche Darstellung der Ergebnisse
-- Einfache Rate-Limitierung
-- setup.php zur einfachen installation
+## Funktionen
 
-## 🔧 Systemanforderungen
+- **Umfassende Validierung**: Prüft XML-Sitemaps auf Konformität mit den Google-Spezifikationen
+- **Detaillierte Analyse**: Überprüft HTTP-Status, XML-Struktur, UTF-8-Kodierung, Größe, und mehr
+- **URL-Stichproben**: Überprüft zufällig ausgewählte URLs aus der Sitemap auf Erreichbarkeit und Indexierbarkeit
+- **Unterstützung für Sitemap-Erweiterungen**: Erkennt und analysiert Image-, Video-, News-, Mobile- und hreflang-Erweiterungen
+- **Bewertungssystem**: Bewertet die Qualität der Sitemap mit einem Punktesystem (A+ bis F)
+- **Empfehlungssystem**: Gibt konkrete Vorschläge zur Verbesserung der Sitemap
+- **Sitemap-Generator**: Erstellt Sitemap-Vorlagen für verschiedene Anwendungsfälle
+- **Rate-Limiting**: Schutz vor Überlastung durch Begrenzung der Anfragen pro IP-Adresse
 
-- PHP 8 oder höher
-- MySQL/MariaDB-Datenbank
-- Webserver mit Unterstützung für PHP (Apache, Nginx, etc.)
-- cURL-Erweiterung für PHP
+## Anforderungen
 
-## 🛠️ Installation
+- PHP 7.4 oder höher
+- MySQL/MariaDB Datenbank
+- PHP-Erweiterungen: PDO, cURL, SimpleXML, JSON, mbstring
+- Webserver mit .htaccess-Unterstützung (Apache empfohlen)
 
-1. **Repository klonen oder Dateien hochladen**
+## Installation
 
-```bash
-git clone https://github.com/withvision/XML-Sitemap-Validator.git
-cd XML-Sitemap-Validator
-```
+1. Laden Sie die Dateien auf Ihren Webserver hoch
+2. Rufen Sie `setup.php` über Ihren Webbrowser auf
+3. Folgen Sie den Anweisungen im Setup-Assistenten:
+   - Systemvoraussetzungen werden geprüft
+   - Datenbankverbindung einrichten
+   - Konfigurationsoptionen festlegen
+   - Sicherheitseinstellungen anpassen
+4. Nach Abschluss des Setups können Sie den Validator unter der Hauptseite aufrufen
+5. Aus Sicherheitsgründen sollten Sie die setup.php nach erfolgreicher Installation löschen
 
-2. **Installation**
+## Verwendung
 
-Führe das `setup.php` Script im Browser aus, und folge der installation um die benötigte Tabelle anzulegen und die grundlegenden Einstellungen vorzunehmen:
+1. Geben Sie die URL einer XML-Sitemap ein (unterstützt werden .xml, .xml.gz und dynamisch generierte Sitemaps)
+2. Das Tool analysiert die Sitemap und zeigt detaillierte Ergebnisse an
+3. Folgen Sie den Empfehlungen zur Optimierung Ihrer Sitemap
+4. Nutzen Sie den Sitemap-Generator, um neue optimierte Sitemaps zu erstellen
 
-```Webbrowser:
-https://deinedomain.tld/setup.php
-```
+## Konfiguration
 
-3. **Konfiguration anpassen**
+Die Hauptkonfiguration erfolgt über die `config.php` Datei:
 
-Die einstellungen können in der `config.php` Datei angepasst werden:
+- **Datenbank-Einstellungen**: Verbindungsparameter für MySQL
+- **Validator-Einstellungen**: Cache-Optionen, User-Agent, HTTP-Timeout, etc.
+- **Sicherheitseinstellungen**: Hostnamen-Einschränkungen, maximale Dateigröße, etc.
 
-```php
-'host' => getenv('DB_HOST') ?: 'localhost',
-'username' => getenv('DB_USER') ?: 'usernamehere',
-'password' => getenv('DB_PASS') ?: 'passwordhere',
-'database' => getenv('DB_NAME') ?: 'databasenamehere'
-```
+## Sicherheitshinweise
 
-4. **Nutzung**
+- Die Anwendung erstellt automatisch .htaccess-Dateien zum Schutz sensibler Daten
+- Stellen Sie sicher, dass Ihr Webserver .htaccess-Einstellungen berücksichtigt
+- Die config.php sollte außerhalb des Webroot-Verzeichnisses platziert werden (wenn möglich)
+- Achten Sie darauf, dass die Datenbankbenutzer über minimale Berechtigungen verfügen
 
-Nach der Installation einfach die `index.php` in einem Browser deiner Wahl aufrufen. Schon kannst du deine erste Sitemap prüfen!
+## Technische Details
+
+- **Caching-System**: Zwischenspeicherung von heruntergeladenen Sitemaps für Debugging-Zwecke
+- **Datenbank-Schema**: Speicherung von Validierungsergebnissen und Rate-Limit-Informationen
+- **HTTP-Komprimierung**: Erkennung und Verarbeitung komprimierter Sitemaps (gzip, deflate)
+- **Robots.txt-Integration**: Überprüfung auf korrekte Einbindung in die robots.txt-Datei
+
+## Lizenz
+
+Dieses Projekt steht unter der MIT-Lizenz - siehe die [LICENSE](LICENSE) Datei für Details.
+
+## Beitragen
+
+Beiträge sind willkommen! Bitte erstellen Sie einen Pull-Request oder eröffnen Sie ein Issue für Fehlerberichte oder Funktionswünsche.
+
+## Autoren
+
+- [Simon Pokorny](https://www.simon-pokorny.com)
+- [DLx-Media.com](https://dlx-media.com)
+
+## Danksagungen
+
+- Danke an alle, die zum Projekt beigetragen haben
 
 ## 📂 Projektstruktur
 
