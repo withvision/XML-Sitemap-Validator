@@ -41,22 +41,45 @@
                         </div>
 
                         <h5 class="mt-4">Analysierte Sitemap</h5>
-                        <p>
-                            <a href="<?php echo htmlspecialchars($results['url']); ?>" target="_blank" rel="noopener noreferrer">
-                                <?php echo htmlspecialchars($results['url']); ?>
-                                <i class="fas fa-external-link-alt ms-1 small"></i>
-                            </a>
-                        </p>
-                        <p><small class="text-muted">Überprüft am: <?php echo htmlspecialchars($results['date_checked']); ?></small></p>
+                    <p>
+                        <a href="<?php echo htmlspecialchars($results['url']); ?>" target="_blank" rel="noopener noreferrer">
+                            <?php echo htmlspecialchars($results['url']); ?>
+                            <i class="fas fa-external-link-alt ms-1 small"></i>
+                        </a>
+                    </p>
+                    <p><small class="text-muted">Überprüft am: <?php echo htmlspecialchars($results['date_checked']); ?></small></p>
 
-                        <!-- Neue Score-Karte für die Qualitätsbewertung -->
-                        <div class="row mt-4">
-                            <div class="col-md-12">
-                                <div class="card">
-                                    <div class="card-header bg-<?php echo $results['sitemap_grade']['color'] ?? 'primary'; ?>">
-                                        <h5 class="text-white mb-0">Sitemap-Qualitätsbewertung</h5>
-                                    </div>
-                                    <div class="card-body">
+                    <!-- Neue Score-Karte für die Qualitätsbewertung -->
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header bg-<?php 
+                                    if (!$results['valid_xml'] || !$results['valid_root_element']) {
+                                        echo 'danger';
+                                    } else {
+                                        echo $results['sitemap_grade']['color'] ?? 'primary'; 
+                                    }
+                                ?>">
+                                    <h5 class="text-white mb-0">
+                                        <?php if (!$results['valid_xml'] || !$results['valid_root_element']): ?>
+                                            Keine gültige Sitemap
+                                        <?php else: ?>
+                                            Sitemap-Qualitätsbewertung
+                                        <?php endif; ?>
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <?php if (!$results['valid_xml'] || !$results['valid_root_element']): ?>
+                                        <div class="alert alert-danger">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            <strong>Die überprüfte URL enthält keine gültige Sitemap!</strong>
+                                            <?php if (!$results['valid_xml']): ?>
+                                                <p class="mb-0 mt-2">Es wurde keine gültige XML-Datei gefunden. Prüfen Sie die URL und stellen Sie sicher, dass sie zu einer Sitemap-Datei führt.</p>
+                                            <?php elseif (!$results['valid_root_element']): ?>
+                                                <p class="mb-0 mt-2">Die XML-Datei hat nicht die erforderliche Sitemap-Struktur. Eine Sitemap muss ein root-Element &lt;urlset&gt; oder &lt;sitemapindex&gt; mit dem korrekten Namespace haben.</p>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php else: ?>
                                         <div class="row align-items-center">
                                             <div class="col-md-3 text-center">
                                                 <div class="display-1 fw-bold text-<?php echo $results['sitemap_grade']['color'] ?? 'primary'; ?>">
@@ -86,339 +109,353 @@
                                                 </p>
                                             </div>
                                         </div>
-                                    </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="row mt-4">
-                            <div class="col-md-6">
-                                <h5>Zusammenfassung</h5>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <tbody>
-                                            <tr>
-                                                <th>HTTP Status</th>
-                                                <td class="<?php echo $results['http_status'] == 200 ? 'table-success' : 'table-danger'; ?>">
-                                                    <?php echo htmlspecialchars($results['http_status']); ?>
-                                                    <?php echo $results['http_status'] == 200 ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-times-circle text-danger"></i>'; ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>MIME-Type</th>
-                                                <td class="<?php echo (isset($results['valid_mime_type']) && $results['valid_mime_type']) ? 'table-success' : 'table-danger'; ?>">
-                                                    <?php echo htmlspecialchars($results['content_type'] ?? 'Unbekannt'); ?>
-                                                    <?php echo (isset($results['valid_mime_type']) && $results['valid_mime_type']) ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-times-circle text-danger"></i>'; ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>Valides XML</th>
-                                                <td class="<?php echo $results['valid_xml'] ? 'table-success' : 'table-danger'; ?>">
-                                                    <?php echo $results['valid_xml'] ? 'Ja' : 'Nein'; ?>
-                                                    <?php echo $results['valid_xml'] ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-times-circle text-danger"></i>'; ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>UTF-8 Codierung</th>
-                                                <td class="<?php echo $results['encoding_utf8'] ? 'table-success' : 'table-danger'; ?>">
-                                                    <?php echo $results['encoding_utf8'] ? 'Ja' : 'Nein'; ?>
-                                                    <?php echo $results['encoding_utf8'] ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-times-circle text-danger"></i>'; ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>Korrektes Root-Element</th>
-                                                <td class="<?php echo $results['valid_root_element'] ? 'table-success' : 'table-danger'; ?>">
-                                                    <?php echo $results['valid_root_element'] ? 'Ja' : 'Nein'; ?>
-                                                    <?php echo $results['valid_root_element'] ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-times-circle text-danger"></i>'; ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>Ladezeit</th>
-                                                <td class="<?php echo $results['load_time'] < 1 ? 'table-success' : ($results['load_time'] < 3 ? 'table-warning' : 'table-danger'); ?>">
-                                                    <?php echo htmlspecialchars($results['load_time']); ?> Sekunden
-                                                    <?php 
-                                                        if ($results['load_time'] < 1) {
-                                                            echo '<i class="fas fa-check-circle text-success"></i>';
-                                                        } elseif ($results['load_time'] < 3) {
-                                                            echo '<i class="fas fa-exclamation-circle text-warning"></i>';
-                                                        } else {
-                                                            echo '<i class="fas fa-times-circle text-danger"></i>';
-                                                        }
-                                                    ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                        <th>Komprimierung</th>
-                                            <td>
-                                                <?php if ($results['is_compressed']): ?>
-                                                    <span class="badge bg-success">Als .xml.gz gespeichert</span>
-                                                    <?php elseif (isset($results['http_compressed']) && $results['http_compressed']): ?>
-                                                          <span class="badge bg-info">HTTP-Komprimierung</span>
-                                                            <?php if (isset($results['content_encoding_header'])): ?>
-                                                        <small class="text-muted">(<?php echo htmlspecialchars($results['content_encoding_header']); ?>)</small>
-                                                <?php endif; ?>
-                                            <?php else: ?>
-                                                <span class="badge bg-warning">Nicht komprimiert</span>
-                                            <?php endif; ?>
-                                                <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" title="Komprimierte Sitemaps sind schneller zu übertragen"></i>
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <h5>Zusammenfassung</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <th>HTTP Status</th>
+                                            <td class="<?php echo $results['http_status'] == 200 ? 'table-success' : 'table-danger'; ?>">
+                                                <?php echo htmlspecialchars($results['http_status']); ?>
+                                                <?php echo $results['http_status'] == 200 ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-times-circle text-danger"></i>'; ?>
                                             </td>
                                         </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <h5>Inhaltsinformationen</h5>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <tbody>
-                                            <tr>
-                                                <th>Typ</th>
-                                                <td>
-                                                    <?php echo $results['is_sitemap_index'] ? 'Sitemap-Index' : 'Standard-Sitemap'; ?>
-                                                    <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" title="<?php echo $results['is_sitemap_index'] ? 'Enthält Verweise auf andere Sitemap-Dateien' : 'Enthält direkte URL-Einträge'; ?>"></i>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>Einträge</th>
-                                                <td class="<?php echo $results['url_count'] <= 50000 ? 'table-success' : 'table-danger'; ?>">
-                                                    <?php echo htmlspecialchars(number_format($results['url_count'], 0, ',', '.')); ?>
-                                                    <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
-                                                       title="Google empfiehlt maximal 50.000 URLs pro Sitemap-Datei"></i>
-                                                    <?php if ($results['url_count'] > 50000): ?>
-                                                        <i class="fas fa-exclamation-triangle text-warning" data-bs-toggle="tooltip" 
-                                                           title="Überschreitet das Limit von 50.000 Einträgen"></i>
-                                                    <?php else: ?>
-                                                        <i class="fas fa-check-circle text-success"></i>
-                                                    <?php endif; ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>Eindeutige URLs</th>
-                                                <td class="<?php echo $results['unique_url_count'] == $results['url_count'] ? 'table-success' : 'table-warning'; ?>">
-                                                    <?php echo htmlspecialchars(number_format($results['unique_url_count'], 0, ',', '.')); ?>
-                                                    <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
-                                                       title="Alle URLs in einer Sitemap sollten eindeutig sein"></i>
-                                                    <?php if ($results['unique_url_count'] < $results['url_count']): ?>
-                                                        <i class="fas fa-exclamation-triangle text-warning" data-bs-toggle="tooltip" 
-                                                           title="Enthält <?php echo $results['url_count'] - $results['unique_url_count']; ?> doppelte URLs"></i>
-                                                    <?php else: ?>
-                                                        <i class="fas fa-check-circle text-success"></i>
-                                                    <?php endif; ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>Dateigröße</th>
-                                                <td class="<?php echo $results['filesize'] <= 52428800 ? 'table-success' : 'table-danger'; ?>">
-                                                    <?php 
-                                                        $fileSizeMB = round($results['filesize'] / (1024 * 1024), 2);
-                                                        echo htmlspecialchars($fileSizeMB) . ' MB'; 
-                                                    ?>
-                                                    <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
-                                                       title="Google empfiehlt maximal 50 MB pro Sitemap-Datei (unkomprimiert)"></i>
-                                                    <?php if ($results['filesize'] > 52428800): ?>
-                                                        <i class="fas fa-exclamation-triangle text-warning" data-bs-toggle="tooltip" 
-                                                           title="Überschreitet das empfohlene Limit von 50 MB"></i>
-                                                    <?php else: ?>
-                                                        <i class="fas fa-check-circle text-success"></i>
-                                                    <?php endif; ?>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                        <tr>
+                                            <th>MIME-Type</th>
+                                            <td class="<?php echo (isset($results['valid_mime_type']) && $results['valid_mime_type']) ? 'table-success' : 'table-danger'; ?>">
+                                                <?php 
+                                                $contentType = $results['content_type'] ?? 'Unbekannt';
+                                                $mimeTypeOnly = explode(';', $contentType)[0];
+                                                echo htmlspecialchars($mimeTypeOnly); 
+                                                ?>
+                                                <?php echo (isset($results['valid_mime_type']) && $results['valid_mime_type']) ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-times-circle text-danger"></i>'; ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Valides XML</th>
+                                            <td class="<?php echo $results['valid_xml'] ? 'table-success' : 'table-danger'; ?>">
+                                                <?php echo $results['valid_xml'] ? 'Ja' : 'Nein'; ?>
+                                                <?php echo $results['valid_xml'] ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-times-circle text-danger"></i>'; ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>UTF-8 Codierung</th>
+                                            <td class="<?php echo $results['encoding_utf8'] ? 'table-success' : 'table-danger'; ?>">
+                                                <?php echo $results['encoding_utf8'] ? 'Ja' : 'Nein'; ?>
+                                                <?php echo $results['encoding_utf8'] ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-times-circle text-danger"></i>'; ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Korrektes Root-Element</th>
+                                            <td class="<?php echo $results['valid_root_element'] ? 'table-success' : 'table-danger'; ?>">
+                                                <?php echo $results['valid_root_element'] ? 'Ja' : 'Nein'; ?>
+                                                <?php echo $results['valid_root_element'] ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-times-circle text-danger"></i>'; ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Ladezeit</th>
+                                            <td class="<?php echo $results['load_time'] < 1 ? 'table-success' : ($results['load_time'] < 3 ? 'table-warning' : 'table-danger'); ?>">
+                                                <?php echo htmlspecialchars($results['load_time']); ?> Sekunden
+                                                <?php 
+                                                    if ($results['load_time'] < 1) {
+                                                        echo '<i class="fas fa-check-circle text-success"></i>';
+                                                    } elseif ($results['load_time'] < 3) {
+                                                        echo '<i class="fas fa-exclamation-circle text-warning"></i>';
+                                                    } else {
+                                                        echo '<i class="fas fa-times-circle text-danger"></i>';
+                                                    }
+                                                ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                    <th>Komprimierung</th>
+                                        <td>
+                                            <?php if ($results['is_compressed']): ?>
+                                                <span class="badge bg-success">Als .xml.gz gespeichert</span>
+                                                <?php elseif (isset($results['http_compressed']) && $results['http_compressed']): ?>
+                                                      <span class="badge bg-info">HTTP-Komprimierung</span>
+                                                        <?php if (isset($results['content_encoding_header'])): ?>
+                                                    <small class="text-muted">(<?php echo htmlspecialchars($results['content_encoding_header']); ?>)</small>
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                            <span class="badge bg-warning">Nicht komprimiert</span>
+                                        <?php endif; ?>
+                                            <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" title="Komprimierte Sitemaps sind schneller zu übertragen"></i>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
+                        
+                        <div class="col-md-6">
+                            <h5>Inhaltsinformationen</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <th>Typ</th>
+                                            <td class="<?php echo (!$results['valid_xml'] || !$results['valid_root_element']) ? 'table-danger' : ''; ?>">
+                                                <?php 
+                                                if (!$results['valid_xml']) {
+                                                    echo '<span class="text-danger">Keine gültige XML-Datei</span>';
+                                                } elseif (!$results['valid_root_element']) {
+                                                    echo '<span class="text-danger">Keine gültige Sitemap-Struktur</span>';
+                                                } else {
+                                                    echo $results['is_sitemap_index'] ? 'Sitemap-Index' : 'Standard-Sitemap'; 
+                                                }
+                                                ?>
+                                                <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
+                                                title="<?php echo (!$results['valid_xml'] || !$results['valid_root_element']) ? 'Diese Datei entspricht nicht dem Sitemap-Format' : ($results['is_sitemap_index'] ? 'Enthält Verweise auf andere Sitemap-Dateien' : 'Enthält direkte URL-Einträge'); ?>"></i>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Einträge</th>
+                                            <td class="<?php echo $results['url_count'] <= 50000 ? 'table-success' : 'table-danger'; ?>">
+                                                <?php echo htmlspecialchars(number_format($results['url_count'], 0, ',', '.')); ?>
+                                                <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
+                                                   title="Google empfiehlt maximal 50.000 URLs pro Sitemap-Datei"></i>
+                                                <?php if ($results['url_count'] > 50000): ?>
+                                                    <i class="fas fa-exclamation-triangle text-warning" data-bs-toggle="tooltip" 
+                                                       title="Überschreitet das Limit von 50.000 Einträgen"></i>
+                                                <?php else: ?>
+                                                    <i class="fas fa-check-circle text-success"></i>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Eindeutige URLs</th>
+                                            <td class="<?php echo $results['unique_url_count'] == $results['url_count'] ? 'table-success' : 'table-warning'; ?>">
+                                                <?php echo htmlspecialchars(number_format($results['unique_url_count'], 0, ',', '.')); ?>
+                                                <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
+                                                   title="Alle URLs in einer Sitemap sollten eindeutig sein"></i>
+                                                <?php if ($results['unique_url_count'] < $results['url_count']): ?>
+                                                    <i class="fas fa-exclamation-triangle text-warning" data-bs-toggle="tooltip" 
+                                                       title="Enthält <?php echo $results['url_count'] - $results['unique_url_count']; ?> doppelte URLs"></i>
+                                                <?php else: ?>
+                                                    <i class="fas fa-check-circle text-success"></i>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Dateigröße</th>
+                                            <td class="<?php echo $results['filesize'] <= 52428800 ? 'table-success' : 'table-danger'; ?>">
+                                                <?php 
+                                                    $fileSizeMB = round($results['filesize'] / (1024 * 1024), 2);
+                                                    echo htmlspecialchars($fileSizeMB) . ' MB'; 
+                                                ?>
+                                                <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
+                                                   title="Google empfiehlt maximal 50 MB pro Sitemap-Datei (unkomprimiert)"></i>
+                                                <?php if ($results['filesize'] > 52428800): ?>
+                                                    <i class="fas fa-exclamation-triangle text-warning" data-bs-toggle="tooltip" 
+                                                       title="Überschreitet das empfohlene Limit von 50 MB"></i>
+                                                <?php else: ?>
+                                                    <i class="fas fa-check-circle text-success"></i>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
 
-                        <div class="row mt-4">
-                            <div class="col-md-6">
-                                <!-- Verbesserte Optionale Elemente Tabelle mit grünem Hintergrund für vorhandene Elemente -->
-                                <h5>Optionale Elemente</h5>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <tbody>
-                                            <tr>
-                                                <th>
-                                                    lastmod
-                                                    <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
-                                                    title="Datum der letzten Änderung einer URL"></i>
-                                                </th>
-                                                <td class="<?php echo $results['has_lastmod'] ? ($results['has_invalid_lastmod'] ?? false ? 'table-warning' : 'table-success') : ''; ?>">
-                                                    <?php if($results['has_lastmod']): ?>
-                                                        Vorhanden 
-                                                        <?php if(isset($results['has_invalid_lastmod']) && $results['has_invalid_lastmod']): ?>
-                                                            <i class="fas fa-exclamation-circle text-warning"></i>
-                                                            <span class="text-danger">Mit Fehlern!</span>
-                                                        <?php else: ?>
-                                                            <i class="fas fa-check-circle text-success"></i>
-                                                        <?php endif; ?>
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <!-- Verbesserte Optionale Elemente Tabelle mit grünem Hintergrund für vorhandene Elemente -->
+                            <h5>Optionale Elemente</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <th>
+                                                lastmod
+                                                <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
+                                                title="Datum der letzten Änderung einer URL"></i>
+                                            </th>
+                                            <td class="<?php echo $results['has_lastmod'] ? ($results['has_invalid_lastmod'] ?? false ? 'table-warning' : 'table-success') : ''; ?>">
+                                                <?php if($results['has_lastmod']): ?>
+                                                    Vorhanden 
+                                                    <?php if(isset($results['has_invalid_lastmod']) && $results['has_invalid_lastmod']): ?>
+                                                        <i class="fas fa-exclamation-circle text-warning"></i>
+                                                        <span class="text-danger">Mit Fehlern!</span>
                                                     <?php else: ?>
-                                                        Nicht vorhanden
+                                                        <i class="fas fa-check-circle text-success"></i>
                                                     <?php endif; ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>
-                                                    changefreq
-                                                    <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
-                                                    title="Änderungshäufigkeit einer URL (z.B. daily, weekly)"></i>
-                                                </th>
-                                                <td class="<?php echo $results['has_changefreq'] ? ($results['has_invalid_changefreq'] ?? false ? 'table-warning' : 'table-success') : ''; ?>">
-                                                    <?php if($results['has_changefreq']): ?>
-                                                        Vorhanden 
-                                                        <?php if(isset($results['has_invalid_changefreq']) && $results['has_invalid_changefreq']): ?>
-                                                            <i class="fas fa-exclamation-circle text-warning"></i>
-                                                            <span class="text-danger">Mit Fehlern!</span>
-                                                        <?php else: ?>
-                                                            <i class="fas fa-check-circle text-success"></i>
-                                                        <?php endif; ?>
+                                                <?php else: ?>
+                                                    Nicht vorhanden
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                changefreq
+                                                <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
+                                                title="Änderungshäufigkeit einer URL (z.B. daily, weekly)"></i>
+                                            </th>
+                                            <td class="<?php echo $results['has_changefreq'] ? ($results['has_invalid_changefreq'] ?? false ? 'table-warning' : 'table-success') : ''; ?>">
+                                                <?php if($results['has_changefreq']): ?>
+                                                    Vorhanden 
+                                                    <?php if(isset($results['has_invalid_changefreq']) && $results['has_invalid_changefreq']): ?>
+                                                        <i class="fas fa-exclamation-circle text-warning"></i>
+                                                        <span class="text-danger">Mit Fehlern!</span>
                                                     <?php else: ?>
-                                                        Nicht vorhanden
+                                                        <i class="fas fa-check-circle text-success"></i>
                                                     <?php endif; ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>
-                                                    priority
-                                                    <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
-                                                    title="Priorität einer URL (0.0 bis 1.0)"></i>
-                                                </th>
-                                                <td class="<?php echo $results['has_priority'] ? ($results['has_invalid_priority'] ?? false ? 'table-warning' : 'table-success') : ''; ?>">
-                                                    <?php if($results['has_priority']): ?>
-                                                        Vorhanden 
-                                                        <?php if(isset($results['has_invalid_priority']) && $results['has_invalid_priority']): ?>
-                                                            <i class="fas fa-exclamation-circle text-warning"></i>
-                                                            <span class="text-danger">Mit Fehlern!</span>
-                                                        <?php else: ?>
-                                                            <i class="fas fa-check-circle text-success"></i>
-                                                        <?php endif; ?>
+                                                <?php else: ?>
+                                                    Nicht vorhanden
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                priority
+                                                <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
+                                                title="Priorität einer URL (0.0 bis 1.0)"></i>
+                                            </th>
+                                            <td class="<?php echo $results['has_priority'] ? ($results['has_invalid_priority'] ?? false ? 'table-warning' : 'table-success') : ''; ?>">
+                                                <?php if($results['has_priority']): ?>
+                                                    Vorhanden 
+                                                    <?php if(isset($results['has_invalid_priority']) && $results['has_invalid_priority']): ?>
+                                                        <i class="fas fa-exclamation-circle text-warning"></i>
+                                                        <span class="text-danger">Mit Fehlern!</span>
                                                     <?php else: ?>
-                                                        Nicht vorhanden
+                                                        <i class="fas fa-check-circle text-success"></i>
                                                     <?php endif; ?>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                
-                                <?php if ($results['has_lastmod'] || $results['has_changefreq'] || $results['has_priority']): ?>
-                                    <div class="alert alert-info mt-3 small">
-                                        <i class="fas fa-info-circle"></i> <strong>Hinweis zu Attributwerten:</strong>
-                                        <ul class="mb-0">
-                                            <?php if ($results['has_lastmod']): ?>
-                                                <li>
-                                                    <strong>lastmod:</strong> 
-                                                    <?php if (isset($results['has_invalid_lastmod']) && $results['has_invalid_lastmod']): ?>
-                                                        <span class="text-danger">Es wurden ungültige lastmod-Datumsformate gefunden!</span>
-                                                        Das Format sollte ISO 8601 entsprechen (YYYY-MM-DD).
-                                                    <?php else: ?>
-                                                        Alle lastmod-Attribute haben ein gültiges Format.
-                                                    <?php endif; ?>
-                                                </li>
-                                            <?php endif; ?>
-                                            
-                                            <?php if ($results['has_changefreq']): ?>
-                                                <li>
-                                                    <strong>changefreq:</strong> 
-                                                    <?php if (isset($results['has_invalid_changefreq']) && $results['has_invalid_changefreq']): ?>
-                                                        <span class="text-danger">Es wurden ungültige changefreq-Werte gefunden!</span>
-                                                        Erlaubte Werte sind: always, hourly, daily, weekly, monthly, yearly, never.
-                                                    <?php else: ?>
-                                                        Alle changefreq-Attribute haben gültige Werte.
-                                                    <?php endif; ?>
-                                                </li>
-                                            <?php endif; ?>
-                                            
-                                            <?php if ($results['has_priority']): ?>
-                                                <li>
-                                                    <strong>priority:</strong> 
-                                                    <?php if (isset($results['has_invalid_priority']) && $results['has_invalid_priority']): ?>
-                                                        <span class="text-danger">Es wurden ungültige priority-Werte gefunden!</span>
-                                                        Die Werte müssen zwischen 0.0 und 1.0 liegen.
-                                                    <?php else: ?>
-                                                        Alle priority-Attribute haben gültige Werte (zwischen 0.0 und 1.0).
-                                                    <?php endif; ?>
-                                                </li>
-                                            <?php endif; ?>
-                                        </ul>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <h5 class="mt-4">Robots.txt Integration</h5>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <tbody>
-                                            <tr>
-                                                <th>Robots.txt zugänglich</th>
-                                                <td class="<?php echo $results['robots_txt_accessible'] ? 'table-success' : 'table-danger'; ?>">
-                                                    <?php echo $results['robots_txt_accessible'] ? 'Ja' : 'Nein'; ?>
-                                                    <?php echo $results['robots_txt_accessible'] ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-times-circle text-danger"></i>'; ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>
-                                                    Sitemap in Robots.txt
-                                                    <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
-                                                       title="Die Sitemap sollte in der robots.txt mit 'Sitemap:' eingetragen sein"></i>
-                                                </th>
-                                                <td class="<?php echo $results['robots_txt_reference'] ? 'table-success' : 'table-warning'; ?>">
-                                                    <?php echo $results['robots_txt_reference'] ? 'Ja' : 'Nein'; ?>
-                                                    <?php echo $results['robots_txt_reference'] ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-exclamation-circle text-warning"></i>'; ?>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                                <?php else: ?>
+                                                    Nicht vorhanden
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                             
-                            <div class="col-md-6">
-                                <!-- Verbesserte Sitemap-Erweiterungen Tabelle mit Zählwerten -->
-                                <h5>Sitemap-Erweiterungen</h5>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <tbody>
-                                            <tr>
-                                                <th>
-                                                    Image-Erweiterung
-                                                    <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
-                                                    title="Zusätzliche Informationen für Bilder (Google Images)"></i>
-                                                </th>
-                                                <td class="<?php echo $results['has_image_extension'] ? 'table-success' : ''; ?>">
-                                                    <?php if($results['has_image_extension']): ?>
-                                                        Vorhanden <i class="fas fa-check-circle text-success"></i>
-                                                        <span class="badge bg-primary ms-2" data-bs-toggle="tooltip" title="Anzahl der Image-Erweiterungen">
-                                                            <?php echo number_format($results['image_extension_count'] ?? 0, 0, ',', '.'); ?>
-                                                        </span>
-                                                    <?php else: ?>
-                                                        Nicht vorhanden
-                                                    <?php endif; ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>
-                                                    Video-Erweiterung
-                                                    <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
-                                                    title="Zusätzliche Informationen für Videos (Google Video)"></i>
-                                                </th>
-                                                <td class="<?php echo $results['has_video_extension'] ? 'table-success' : ''; ?>">
-                                                    <?php if($results['has_video_extension']): ?>
-                                                        Vorhanden <i class="fas fa-check-circle text-success"></i>
-                                                        <span class="badge bg-primary ms-2" data-bs-toggle="tooltip" title="Anzahl der Video-Erweiterungen">
-                                                            <?php echo number_format($results['video_extension_count'] ?? 0, 0, ',', '.'); ?>
-                                                        </span>
-                                                    <?php else: ?>
-                                                        Nicht vorhanden
-                                                    <?php endif; ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>
-                                                    News-Erweiterung
-                                                    <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
-                                                    title="Zusätzliche Informationen für News-Artikel (Google News)"></i>
-                                                </th>
-                                                <td class="<?php echo $results['has_news_extension'] ? 'table-success' : ''; ?>">
+                            <?php if ($results['has_lastmod'] || $results['has_changefreq'] || $results['has_priority']): ?>
+                                <div class="alert alert-info mt-3 small">
+                                    <i class="fas fa-info-circle"></i> <strong>Hinweis zu Attributwerten:</strong>
+                                    <ul class="mb-0">
+                                        <?php if ($results['has_lastmod']): ?>
+                                            <li>
+                                                <strong>lastmod:</strong> 
+                                                <?php if (isset($results['has_invalid_lastmod']) && $results['has_invalid_lastmod']): ?>
+                                                    <span class="text-danger">Es wurden ungültige lastmod-Datumsformate gefunden!</span>
+                                                    Das Format sollte ISO 8601 entsprechen (YYYY-MM-DD).
+                                                <?php else: ?>
+                                                    Alle lastmod-Attribute haben ein gültiges Format.
+                                                <?php endif; ?>
+                                            </li>
+                                        <?php endif; ?>
+                                        
+                                        <?php if ($results['has_changefreq']): ?>
+                                            <li>
+                                                <strong>changefreq:</strong> 
+                                                <?php if (isset($results['has_invalid_changefreq']) && $results['has_invalid_changefreq']): ?>
+                                                    <span class="text-danger">Es wurden ungültige changefreq-Werte gefunden!</span>
+                                                    Erlaubte Werte sind: always, hourly, daily, weekly, monthly, yearly, never.
+                                                <?php else: ?>
+                                                    Alle changefreq-Attribute haben gültige Werte.
+                                                <?php endif; ?>
+                                            </li>
+                                        <?php endif; ?>
+                                        
+                                        <?php if ($results['has_priority']): ?>
+                                            <li>
+                                                <strong>priority:</strong> 
+                                                <?php if (isset($results['has_invalid_priority']) && $results['has_invalid_priority']): ?>
+                                                    <span class="text-danger">Es wurden ungültige priority-Werte gefunden!</span>
+                                                    Die Werte müssen zwischen 0.0 und 1.0 liegen.
+                                                <?php else: ?>
+                                                    Alle priority-Attribute haben gültige Werte (zwischen 0.0 und 1.0).
+                                                <?php endif; ?>
+                                            </li>
+                                        <?php endif; ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
+                            
+                            <h5 class="mt-4">Robots.txt Integration</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <th>Robots.txt zugänglich</th>
+                                            <td class="<?php echo $results['robots_txt_accessible'] ? 'table-success' : 'table-danger'; ?>">
+                                                <?php echo $results['robots_txt_accessible'] ? 'Ja' : 'Nein'; ?>
+                                                <?php echo $results['robots_txt_accessible'] ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-times-circle text-danger"></i>'; ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                Sitemap in Robots.txt
+                                                <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
+                                                   title="Die Sitemap sollte in der robots.txt mit 'Sitemap:' eingetragen sein"></i>
+                                            </th>
+                                            <td class="<?php echo $results['robots_txt_reference'] ? 'table-success' : 'table-warning'; ?>">
+                                                <?php echo $results['robots_txt_reference'] ? 'Ja' : 'Nein'; ?>
+                                                <?php echo $results['robots_txt_reference'] ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-exclamation-circle text-warning"></i>'; ?>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <!-- Verbesserte Sitemap-Erweiterungen Tabelle mit Zählwerten -->
+                            <h5>Sitemap-Erweiterungen</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <th>
+                                                Image-Erweiterung
+                                                <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
+                                                title="Zusätzliche Informationen für Bilder (Google Images)"></i>
+                                            </th>
+                                            <td class="<?php echo $results['has_image_extension'] ? 'table-success' : ''; ?>">
+                                                <?php if($results['has_image_extension']): ?>
+                                                    Vorhanden <i class="fas fa-check-circle text-success"></i>
+                                                    <span class="badge bg-primary ms-2" data-bs-toggle="tooltip" title="Anzahl der Image-Erweiterungen">
+                                                        <?php echo number_format($results['image_extension_count'] ?? 0, 0, ',', '.'); ?>
+                                                    </span>
+                                                <?php else: ?>
+                                                    Nicht vorhanden
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                Video-Erweiterung
+                                                <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
+                                                title="Zusätzliche Informationen für Videos (Google Video)"></i>
+                                            </th>
+                                            <td class="<?php echo $results['has_video_extension'] ? 'table-success' : ''; ?>">
+                                                <?php if($results['has_video_extension']): ?>
+                                                    Vorhanden <i class="fas fa-check-circle text-success"></i>
+                                                    <span class="badge bg-primary ms-2" data-bs-toggle="tooltip" title="Anzahl der Video-Erweiterungen">
+                                                        <?php echo number_format($results['video_extension_count'] ?? 0, 0, ',', '.'); ?>
+                                                    </span>
+                                                <?php else: ?>
+                                                    Nicht vorhanden
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                News-Erweiterung
+                                                <i class="fas fa-info-circle text-info" data-bs-toggle="tooltip" 
+                                                title="Zusätzliche Informationen für News-Artikel (Google News)"></i>
+                                            </th>
+                                            <td class="<?php echo $results['has_news_extension'] ? 'table-success' : ''; ?>">
                                                     <?php if($results['has_news_extension']): ?>
                                                         Vorhanden <i class="fas fa-check-circle text-success"></i>
                                                         <span class="badge bg-primary ms-2" data-bs-toggle="tooltip" title="Anzahl der News-Erweiterungen">
